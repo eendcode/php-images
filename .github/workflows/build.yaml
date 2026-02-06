@@ -42,5 +42,5 @@ jobs:
           context: .
           file: ./Containerfile # Explicitly point to your Containerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}:8
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
