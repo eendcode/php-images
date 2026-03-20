@@ -1,0 +1,19 @@
+ARG ENVIRONMENT=prod
+FROM gcr.io/distroless/static-debian13:debug AS base-debug
+FROM gcr.io/distroless/static-debian13:nonroot AS base-prod
+FROM base-${ENVIRONMENT} AS final 
+
+COPY --from=ghcr.io/eendcode/php-images:main-frankenphp /fp /fp
+COPY --from=nextcloud /usr/src/nextcloud /app
+
+ENV PERSISTENT_RUNTIME_DEPS=""
+ENV PWD=/app
+ENV SERVER_NAME=:8000
+ENV XDG_DATA_HOME=/tmp/data
+ENV XDG_CONFIG_HOME=/tmp/config
+VOLUME [ "/tmp" ]
+WORKDIR /app
+
+USER 65532
+
+ENTRYPOINT ["/fp", "php-server", "--root", "/app", "--listen", "0.0.0.0:8000", "--access-log"]

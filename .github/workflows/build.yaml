@@ -20,7 +20,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Log in to the Container registry
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -28,19 +27,35 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Extract metadata (tags, labels) for Docker
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      # Build and push the image
-      - name: Build and push
+      - name: Build and push frankenphp
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Containerfile.php8
+          file: ./Containerfile.frankenphp
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}-frankenphp
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build and push wordpress
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Containerfile.wordpress
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}-wordpress
+          labels: ${{ steps.meta.outputs.labels }}                
+
+      - name: Build and push nextcloud
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Containerfile.nextcloud
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}-nextcloud
+          labels: ${{ steps.meta.outputs.labels }}          
