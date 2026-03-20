@@ -3,7 +3,7 @@ FROM gcr.io/distroless/static-debian13:debug AS base-debug
 FROM gcr.io/distroless/static-debian13:nonroot AS base-prod
 FROM base-${ENVIRONMENT} AS final 
 
-COPY --from=ghcr.io/php-images:main-frankenphp /fp /fp
+COPY --from=ghcr.io/eendcode/php-images:main-frankenphp /fp /fp
 COPY --from=wordpress /usr/src/wordpress /app
 
 ENV PERSISTENT_RUNTIME_DEPS=""
